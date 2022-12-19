@@ -1,0 +1,79 @@
+const express = require('express');
+const router = express.Router();
+const bcrypt = require("bcryptjs");
+
+const User = require('../models/User');
+const Post = require('../models/Post');
+
+//Router 01 : Update a user using User API.
+router.put('/:id', async (req, res) => {
+
+    if (req.body.userId === req.params.id) {
+        if (req.body.password) {
+            const salt = await bcrypt.genSaltSync(10);
+            req.body.password = await bcrypt.hashSync(req.body.password, salt);
+        }
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                req.params.id, { $set : req.body }, { new: true}
+            );
+            res.status(200).json(updatedUser);
+        } catch (error) {
+            res.status(500).json(error);
+        }        
+    }else{
+        res.status(401).json("You can update only your account");
+    }
+
+});
+
+//Router 02 : Delete a user using User API.
+router.delete('/:id', async (req, res) => {
+
+    if (req.body.userId === req.params.id) {
+        try {
+            const user = await User.findById(req.params.id);
+            try {
+                await Post.deleteMany({ username : user.username});
+                await User.findByIdAndDelete(req.params.id);
+                res.status(200).json("User has been deleted");
+            } catch (error) {
+                res.status(200).json(error);
+            }     
+        } catch (error) {
+            res.status(401).json("User Not Found!.");
+        }   
+    }else{
+        res.status(401).json("You can update only your account");
+    }
+});
+
+//Router 03 : Get a user using User API.
+router.get('/:id', async (req, res) => {  
+    try {
+        const user = await User.findById(req.params.id);
+        // console.log(user);
+        const { password, ...others } = user._doc;
+        res.status(200).json(others);
+        
+
+    } catch (error) {
+        res.status(401).json("User Not Found!.");
+    }       
+});
+
+// //Router 04 : Get All user using User API.
+// router.get('/', async (req, res) => {  
+//     try {        
+//         // const user = await User.find().sort({ createdAt: "desc" });
+//         const user = await User.find();
+//         const { password, ...users } = user._doc;
+//         res.status(200).json(users);
+//     } catch (error) {
+//         res.status(401).json("Users Not Found!.");
+//     }       
+// });
+
+
+module.exports = router;
+

@@ -1,0 +1,76 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+body{
+  font-family: 'Roboto', sans-serif;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+}
+.text-primary {
+  color: #d40000!important;
+}
+a, a:hover{
+  color: #d40000;
+  text-decoration: none;
+}
+
+
+.loginbtn:disabled{
+  cursor: not-allowed;
+  background-color: #d40000;
+}
+.edit-delete-btn{
+  text-align: right;
+  width: 100%;
+}
+.edit-delete-btn .fa-pen-to-square{
+  margin-right: 10px;
+  color: rgb(26, 28, 39);
+  cursor: pointer;
+}
+.edit-delete-btn .fa-trash{
+  color: #d40000;
+  cursor: pointer;
+}
+
+
+
+
