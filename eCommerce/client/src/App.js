@@ -9,6 +9,8 @@ import { ToastContainer} from 'react-toastify';
 import Header from './component/layout/Header/Header';
 import Home from './component/layout/Home/Home';
 import Footer from './component/layout/Footer/Footer';
+import ProductDetails from "./component/layout/Products/ProductDetails";
+import Products from "./component/layout/Products/Products";
 
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
         <Header/> 
         <Routes>
           <Route exact path='/' element={<Home/>}/>
+          <Route exact path='/products' element={<Products/>}/>
+          <Route exact path='/product/:id' element={<ProductDetails/>}/>
         </Routes>
         <Footer/>
       </Router>

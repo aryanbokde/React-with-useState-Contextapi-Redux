@@ -11,17 +11,18 @@ import { useEffect } from "react";
 const Home = () => {  
 
   const dispatch = useDispatch();
-  const { loading, products, productCount} = useSelector((state) => state.product);
+  const { loading, products } = useSelector((state) => state.product);
   
   useEffect(() => {
     dispatch(fetchAllProduct());
     // eslint-disable-next-line
   }, []);
-console.log(productCount);
   return (
     <Fragment>
-      
-        <Fragment>
+        { loading ? (
+            <Loader/> 
+          ): (
+          <Fragment>
           <MetaData title="E-Commerce" />
 
           <div className="banner">
@@ -36,14 +37,14 @@ console.log(productCount);
           </div>
 
           <h2 className="homeHeading">Featured Products</h2>          
-          { loading ? 
-            <Loader/> 
-            :
+         
             <div className="container" id="container">
-              { products && products.map((product) => <ProductCard  product={product} key={product._id}/>) }
+              { products.length > 1  && products.map((product) => <ProductCard  product={product} key={product._id}/>) }
             </div>
-          }
-        </Fragment>
+          </Fragment>
+          )
+        }
+        
     </Fragment>
   );
 };

@@ -19,10 +19,23 @@ const fetch2 = async(url, type) => {   //1
     return await res.json();
 };
 
+//Fetch All Products 
 export const fetchAllProduct = createAsyncThunk(
     'fetchallproduct',
     async()=> {       
         const result = await fetch2("/products", "get");
+        return result
+    }
+);
+
+
+
+
+//Fetch Product Detail
+export const productDetail = createAsyncThunk(
+    'productdetail',
+    async(productId)=> {       
+        const result = await fetch2(`/product/${productId}`, "get");
         return result
     }
 );
@@ -44,11 +57,27 @@ const productReducer = createSlice({
             if (success) {
                 state.products = products
                 state.productCount = productCount
+            }else{
+                toast.error(message);
             }
         })    
         builder.addCase(fetchAllProduct.rejected, (state, action) => {
             console.log(action.error.message);
-            toast.error(action.error.message);
+        })    
+        // ========== Get Product detail ============= //
+        builder.addCase(productDetail.pending, (state) => {
+            state.loading = true
+        })
+        builder.addCase(productDetail.fulfilled, (state, {payload:{success, product, message }}) => {
+            state.loading = false
+            if (success) {
+                state.products = product
+            }else{
+                toast.error(message);
+            }
+        })    
+        builder.addCase(productDetail.rejected, (state, action) => {
+            console.log(action.error.message);
         })    
            
     }
