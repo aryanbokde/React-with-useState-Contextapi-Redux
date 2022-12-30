@@ -7,6 +7,7 @@ const cors = require('cors');
 //Include databse connection to connect database
 const connectToMongo = require('./db');
 
+
 //Get Authetication route and other routes file .
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/users');

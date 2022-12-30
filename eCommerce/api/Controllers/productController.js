@@ -13,14 +13,14 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 
 //Get all Product by Admin ----Admin
 exports.getAllProducts = catchAsyncErrors(async (req, res) => {
-  const resultPerPage = 5;
+  const resultPerPage = 8;
   const productCount = await Product.countDocuments();
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
     .filter()
     .pagination(resultPerPage);
   const products = await apiFeature.query;
-  // const products = await Product.find();
+  
   res.status(200).json({ success: true, products, productCount });
 });
 
