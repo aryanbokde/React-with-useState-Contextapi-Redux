@@ -11,18 +11,30 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   res.status(201).json({ success: true, product });
 });
 
+
+
 //Get all Product by Admin ----Admin
 exports.getAllProducts = catchAsyncErrors(async (req, res) => {
-  const resultPerPage = 8;
+
+  const resultPerPage = 4;
   const productCount = await Product.countDocuments();
+
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
-    .filter()
-    .pagination(resultPerPage);
-  const products = await apiFeature.query;
+    .filter();
+
+    let products = await apiFeature.query;
+    
+    let filteredProductCount = products.length;
+
+    apiFeature.pagination(resultPerPage);
+
+    products = await apiFeature.query.clone();
   
-  res.status(200).json({ success: true, products, productCount });
+  res.status(200).json({ success: true, products, productCount, resultPerPage, filteredProductCount });
 });
+
+
 
 //Update Product by Admin ----Admin
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {

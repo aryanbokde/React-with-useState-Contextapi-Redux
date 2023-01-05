@@ -7,6 +7,8 @@ const initialState = {
     success: "",
     error: "",
     productCount:null,
+    resultPerPage:null,
+    filteredProductCount:null,
 }
 
 const fetch2 = async(url, type) => {   //1
@@ -22,13 +24,22 @@ const fetch2 = async(url, type) => {   //1
 //Fetch All Products 
 export const fetchAllProduct = createAsyncThunk(
     'fetchallproduct',
-    async()=> {       
-        const result = await fetch2("/products", "get");
+    async(Obj = {keyword: '', currentPage: 1, price:[0, 25000], category:'', ratings:0})=> {
+        const keyword = Obj.keyword;
+        const currentPage = Obj.currentPage;
+        const price = Obj.price;
+        const category = Obj.category;
+        const ratings = Obj.ratings;
+
+        let link = `/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
+        if (category) {
+            link = `/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
+        }
+        console.log(link);
+        const result = await fetch2(link, "get");
         return result
     }
 );
-
-
 
 
 //Fetch Product Detail
@@ -52,14 +63,16 @@ const productReducer = createSlice({
         builder.addCase(fetchAllProduct.pending, (state) => {
             state.loading = true
         })
-        builder.addCase(fetchAllProduct.fulfilled, (state, {payload:{success, products, productCount, message}}) => {
+        builder.addCase(fetchAllProduct.fulfilled, (state, {payload:{success, products, productCount, resultPerPage, filteredProductCount, message}}) => {
             state.loading = false
             if (success) {
                 state.products = products
                 state.productCount = productCount
+                state.resultPerPage = resultPerPage
+                state.filteredProductCount = filteredProductCount
             }else{
                 toast.error(message);
-            }
+            } 
         })    
         builder.addCase(fetchAllProduct.rejected, (state, action) => {
             console.log(action.error.message);
