@@ -1,35 +1,44 @@
-import React, { Fragment, useRef, useState, useEffect } from "react";
+import React, { Fragment, useRef, useState, useEffect, useCallback } from "react";
 import "./LoginSignUp.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from '../../Reducers/userReducer';
 import { useDispatch, useSelector } from 'react-redux';
 
 
 const LoginSignUp = () => {
+
+  const history = useNavigate();
+
   const loginTab = useRef(null);
   const registerTab = useRef(null);
   const switcherTab = useRef(null);
-
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-
   const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
   });
-
   const { name, email, password } = user;
-
   const [avatar, setAvatar] = useState("/Profile.png");  
   const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
   const dispatch = useDispatch();
-  const { loading, token } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  const authenticated = useCallback(() => {
+    if (isAuthenticated) {
+      history('/account');
+    }
+  },[isAuthenticated]);
+
+  useEffect(() => {
+    authenticated();
+    // eslint-disable-next-line 
+  }, [authenticated]);
 
   const loginSubmit = (e) => {
-    e.preventDefault();
- 
+    e.preventDefault(); 
     dispatch(loginUser({email:loginEmail, password:loginPassword}));
   };
 
@@ -60,8 +69,7 @@ const LoginSignUp = () => {
     }
   };
 
-  useEffect(() => {}, []);
-
+  
   const switchTabs = (e, tab) => {
     if (tab === "login") {
       switcherTab.current.classList.add("shiftToNeutral");
@@ -78,9 +86,9 @@ const LoginSignUp = () => {
       loginTab.current.classList.add("shiftToLeft");
     }
   };
-
+ 
   return (
-    <Fragment>
+    <Fragment>    
       <Fragment>
         <div style={{ padding: "50px 0px", backgroundColor: "#eee" }}>
           <div className="container">

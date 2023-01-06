@@ -7,6 +7,7 @@ const initialState = {
     success: "",
     error: "",
     token: "",
+    isAuthenticated:false,
 }
 
 
@@ -43,6 +44,7 @@ const userReducer = createSlice({
         //User Trying to Login 
         builder.addCase(loginUser.pending, (state) => {
             state.loading = true
+            state.isAuthenticated = false
         })
         //User login
         builder.addCase(loginUser.fulfilled, (state, {payload:{success, user, token, message}}) => {
@@ -50,13 +52,16 @@ const userReducer = createSlice({
             if (success) {
                 state.user = user
                 state.token = token
-                toast.success("You have successfullty LoggedIn.");
+                state.isAuthenticated = true
+                toast.success("You have successfully LoggedIn.");
             }else{
                 toast.error(message);
             }
         })
         //User login failed
         builder.addCase(loginUser.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.error.message
             toast.error(action.error.message);
         })
     }

@@ -35,7 +35,6 @@ export const fetchAllProduct = createAsyncThunk(
         if (category) {
             link = `/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
         }
-        console.log(link);
         const result = await fetch2(link, "get");
         return result
     }
